@@ -7,13 +7,17 @@ pipeline {
     }
 
     stages {
-        stage('Prepare') {
-            steps {
-                // Ensure Docker is available
+stage('Prepare') {
+    steps {
+        script {
+            if (isUnix()) {
                 sh 'docker --version'
+            } else {
+                bat 'docker --version'
+            }
         }
-        }
-
+    }
+}
     }
 
 }
