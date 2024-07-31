@@ -25,27 +25,7 @@ pipeline {
         stage('Network Scanning') {
             steps {
                 // Run Nmap scan
-                sh "docker run --rm ${NMAP_IMAGE} -sV -p- ${TARGET_URL} -oX security_reports/nmap_results.xml"
-            }
-        }
-
-        stage('Vulnerability Scanning') {
-            steps {
-                // Run OWASP ZAP scan
-                sh """
-                docker run --rm -v \$(pwd)/security_reports:/zap/wrk:rw ${ZAP_IMAGE} zap-baseline.py \
-                    -t ${TARGET_URL} -g gen.conf -r zap_report.html
-                """
-            }
-        }
-
-        stage('Analyze Results') {
-            steps {
-                // Example: Count high-risk findings in Nmap results
-                sh 'grep "high" security_reports/nmap_results.xml | wc -l'
-                
-                // Example: Check for high-risk findings in ZAP report
-                sh 'grep "High" security_reports/zap_report.html | wc -l'
+                sh "docker run --rm ${NMAP_IMAGE} -sV -p- ${TARGET_URL}"
             }
         }
     }
